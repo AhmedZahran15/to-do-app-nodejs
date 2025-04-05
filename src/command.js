@@ -1,8 +1,7 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { editTask, getAllTasks, newTask, removeTask, removeAllTasks } from "./todos.js";
 
 const program = new Command();
-const STATES = ["to-do", "in-progress", "done"];
 
 program
   .command("add")
@@ -38,7 +37,7 @@ program
   .command("edit")
   .description("Edit a task")
   .option("-t, --title <title>", "Task title")
-  .option("-s, --status <status>", "Task status")
+  .addOption(new Option("-s, --status <status>", "Task status").choices(["to-do", "in-progress", "done"]))
   .option("-i, --id <id>", "Task ID")
   .action(async (options) => {
     const { title, status, id } = options;
@@ -50,12 +49,7 @@ program
       console.error("Error: At least one of title or status is required.");
       return;
     }
-    if (status && !STATES.includes(status)) {
-      console.error(
-        "Error: Invalid status. Valid statuses are: to-do, in-progress, done."
-      );
-      return;
-    }
+    
     const updatedTask = await editTask(+id, status, title);
     if (updatedTask) {
       console.log("Task updated successfully:");
