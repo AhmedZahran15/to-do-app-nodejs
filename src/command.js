@@ -6,13 +6,9 @@ const program = new Command();
 program
   .command("add")
   .description("Add a new task")
-  .option("-t, --title <title>", "Task title")
+  .requiredOption("-t, --title <title>", "Task title")
   .action(async (options) => {
     const { title } = options;
-    if (!title) {
-      console.error("Error: Title is required.");
-      return;
-    }
     const task = await newTask(title);
     console.log("Task added successfully:");
     console.log(task);
@@ -38,13 +34,9 @@ program
   .description("Edit a task")
   .option("-t, --title <title>", "Task title")
   .addOption(new Option("-s, --status <status>", "Task status").choices(["to-do", "in-progress", "done"]))
-  .option("-i, --id <id>", "Task ID")
+  .requiredOption("-i, --id <id>", "Task ID")
   .action(async (options) => {
     const { title, status, id } = options;
-    if (!id) {
-      console.error("Error: ID is required.");
-      return;
-    }
     if (!title && !status) {
       console.error("Error: At least one of title or status is required.");
       return;
